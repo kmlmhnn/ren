@@ -1,0 +1,9 @@
+altgraph==0.17
+flake8==3.8.4
+importlib-metadata==2.0.0
+mccabe==0.6.1
+pycodestyle==2.6.0
+pyflakes==2.2.0
+pyinstaller==4.0
+pyinstaller-hooks-contrib==2020.10
+zipp==3.4.0
