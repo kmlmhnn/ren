@@ -119,7 +119,7 @@ class Window:
         self.show_selected()
 
     def commit(self):
-        count = rename(self.selection.peek())
+        count = rename(self.path, self.selection.peek())
         message = '%d files renamed.' % count
         messagebox.showinfo(message=message)
         self.selection = Selection(listdir(self.path))

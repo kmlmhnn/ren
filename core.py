@@ -6,19 +6,18 @@ def prefixfn(string, _, new):
 
 
 def suffixfn(string, _, new):
-    before, sep, after = string.partition('.')
-    return ''.join([before, new, '.', after])
+    return string + new
 
 
 def insertfn(string, substring, new):
-    if not substring or substring not in string:
+    if not new or not substring or substring not in string:
         return string
     before, sep, after = string.partition(substring)
     return ''.join([before, new, sep, after])
 
 
 def appendfn(string, substring, new):
-    if not substring or substring not in string:
+    if not new or not substring or substring not in string:
         return string
     before, sep, after = string.partition(substring)
     return ''.join([before, sep, new, after])
@@ -28,7 +27,7 @@ def changefn(string, substring, replacement):
     if not substring or substring not in string:
         return string
     before, sep, after = string.partition(substring)
-    return ''.join([before, replacement, after])
+    return ''.join([before, replacement, after]) or string
 
 
 def listdir(path):
@@ -36,13 +35,18 @@ def listdir(path):
     return [name for name in os.listdir() if not os.path.isdir(name)]
 
 
-def rename(lst):
+def rename(path, lst):
+    os.chdir(path)
     count = 0
     for (src, dest) in lst:
         if src != dest:
             os.replace(src, dest)
             count += 1
     return count
+
+
+class FilenameCollisionError(Exception):
+    pass
 
 
 class Selection:
@@ -80,7 +84,7 @@ class Selection:
         names = [e[-1] for e in self.entries]
         if len(names) != len(set(names)):
             self.rollback()
-            raise Exception('Filename collisions detected.')
+            raise FilenameCollisionError('Filename collisions detected.')
 
     def rollback(self):
         for i in self.active():
