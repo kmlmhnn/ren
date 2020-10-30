@@ -77,6 +77,10 @@ class Selection:
         for i in self.active():
             entry = self.entries[i]
             entry.append(fn(entry[-1]))
+        names = [e[-1] for e in self.entries]
+        if len(names) != len(set(names)):
+            self.rollback()
+            raise Exception('Filename collisions detected.')
 
     def rollback(self):
         for i in self.active():

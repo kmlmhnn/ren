@@ -108,7 +108,10 @@ class Window:
     def transform(self):
         self.set_command_mode()
         fn, substring, payload = self.xform, self.key.get(), self.arg.get()
-        self.selection.transform(lambda string: fn(string, substring, payload))
+        try:
+            self.selection.transform(lambda string: fn(string, substring, payload))
+        except Exception as e:
+            messagebox.showinfo(message=str(e))
         self.show_selected()
 
     def undo_transform(self):
