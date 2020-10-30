@@ -62,7 +62,7 @@ class Selection:
 
     def tighten(self, pattern):
         current = self.active()
-        new = [i for i in current if pattern in self.entries[i][-1]]
+        new = [i for i in current if pattern in self.entries[i][0]]
         if current != new:
             self.stack.append(new)
 

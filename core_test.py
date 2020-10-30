@@ -136,7 +136,7 @@ def test_transformations_are_aborted_on_filename_collisions(selection):
 
 def test_transformations_are_rolledback_only_for_modified_files(selection):
     selection.transform(lambda s: changefn(s, 'foo', 'FOO'))
-    selection.tighten('FOO')
+    selection.tighten('foo')
     with pytest.raises(FilenameCollisionError):
         selection.transform(lambda s: changefn(s, 'FOO_123', 'bar_123'))
     assert [x for (_, x) in selection.peek()] == ['FOO_123', 'FOO_456']
@@ -145,3 +145,13 @@ def test_transformations_are_rolledback_only_for_modified_files(selection):
 def test_file_cannot_be_renamed_to_the_empty_string(selection):
     selection.transform(lambda s: changefn(s, 'foo_123', ''))
     assert [x for (_, x) in selection.peek()] == ['foo_123', 'foo_456', 'bar_123', 'baz_123']
+
+
+def test_uncommitted_filenames_shouldnot_be_considered_for_selection(selection):
+    selection.transform(lambda s: changefn(s, 'f', 'F'))
+    selection.tighten('f')
+    s1 = selection.peek()
+    selection.clear()
+    selection.tighten('F')
+    s2 = selection.peek()
+    assert s1 == [('foo_123', 'Foo_123'), ('foo_456', 'Foo_456')] and s2 == []
